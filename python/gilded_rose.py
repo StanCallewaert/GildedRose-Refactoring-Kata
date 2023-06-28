@@ -10,9 +10,11 @@ class GildedRose:
     def update_quality(self):
         """Update the quality of all the items in the in according to specs in README.md"""
         for item in self.items:
-            # Update the quality of the item according to the specs in README.md
+            # Update the quality of the item according to the specs in README.md:
+            # Quality of Brie increases instead of decreasing
             if item.name == Item.BRIE:
                 item.change_quality_item_by_number(number=1)
+            # Quality of backstage passes increases more closer to sell_in and 0 after sell_in
             elif item.name == Item.BACKSTAGE_PASSES:
                 if item.sell_in > 10:
                     item.change_quality_item_by_number(number=1)
@@ -22,11 +24,18 @@ class GildedRose:
                     item.change_quality_item_by_number(number=3)
                 else:
                     item.quality = 0
+            # Quality of Sulfaras doesn't change
             elif item.name != Item.SULFURAS:
-                # When item is not special it degrades twice as fast once the sell by date passed
+                # Item degrades twice as fast once the sell by date passed
                 degrade_twice_as_fast = item.sell_in <= 0
+                number = -1
+
+                # Quality of Conjured changes twice as fast as normal items
+                if item.name == Item.CONJURED:
+                    number *= 2
+
                 item.change_quality_item_by_number(
-                    number=-1,
+                    number=number,
                     degrade_twice_as_fast=degrade_twice_as_fast
                 )
 
@@ -39,6 +48,7 @@ class Item:
     BRIE = "Aged Brie"
     BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
     SULFURAS = "Sulfuras, Hand of Ragnaros"
+    CONJURED = "Conjured"
 
     def __init__(self, name, sell_in, quality):
         self.name = name
