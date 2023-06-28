@@ -37,9 +37,20 @@ class GildedRose(object):
 
 
 class Item:
+    BRIE = "Aged Brie"
+    BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+    SULFURAS = "Sulfuras, Hand of Ragnaros"
+
     def __init__(self, name, sell_in, quality):
         self.name = name
         self.sell_in = sell_in
+
+        # Raise errors if quality is set negative or over 50
+        if quality < 0:
+            raise ValueError("Quality can't be negative")
+        elif quality > 50:
+            raise ValueError("Quality can't be over 50")
+        
         self.quality = quality
 
     def __repr__(self):
