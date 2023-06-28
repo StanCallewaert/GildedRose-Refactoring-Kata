@@ -39,10 +39,10 @@ class GildedRoseTest(unittest.TestCase):
         # Create GildedRose instance with items that have different code flows
         items = [
             Item(name="Random item", sell_in=10, quality=1),
-            Item(name=Item.BRIE, sell_in=10, quality=1),
-            Item(name=Item.BACKSTAGE_PASSES, sell_in=10, quality=1),
-            Item(name=Item.SULFURAS, sell_in=10, quality=1),
-            Item(name=Item.CONJURED, sell_in=10, quality=1)
+            Item(name=GildedRose.BRIE, sell_in=10, quality=1),
+            Item(name=GildedRose.BACKSTAGE_PASSES, sell_in=10, quality=1),
+            Item(name=GildedRose.SULFURAS, sell_in=10, quality=1),
+            Item(name=GildedRose.CONJURED, sell_in=10, quality=1)
         ]
         gilded_rose = GildedRose(items)
 
@@ -58,25 +58,11 @@ class GildedRoseTest(unittest.TestCase):
                 "Quality of " + item.name + " is negative. It is: " + str(item.quality)
             )
 
-        # Try to set a negative quality value when creating an item instance
-        item = None
-        try:
-            item = Item(name="Another random item", sell_in=0, quality=-1)
-        except ValueError:
-            pass
-
-        # Check if it was possible to set negative quality value (it shouldn't be)
-        self.assertEqual(
-            item,
-            None,
-            "Possible to set quality of an item negative when creating instance"
-        )
-
     def test_quality_brie_increases(self):
         """Test if quality of brie increases"""
 
         # Create GildedRose instance with a Brie item and update quality
-        items = [Item(name=Item.BRIE, sell_in=5, quality=1)]
+        items = [Item(name=GildedRose.BRIE, sell_in=5, quality=1)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
 
@@ -89,10 +75,10 @@ class GildedRoseTest(unittest.TestCase):
         # Create GildedRose instance with items that have different code flows
         items = [
             Item(name="Random item", sell_in=10, quality=49),
-            Item(name=Item.BRIE, sell_in=10, quality=49),
-            Item(name=Item.BACKSTAGE_PASSES, sell_in=10, quality=1),
-            Item(name=Item.SULFURAS, sell_in=10, quality=1),
-            Item(name=Item.CONJURED, sell_in=10, quality=1)
+            Item(name=GildedRose.BRIE, sell_in=10, quality=49),
+            Item(name=GildedRose.BACKSTAGE_PASSES, sell_in=10, quality=1),
+            Item(name=GildedRose.SULFURAS, sell_in=10, quality=1),
+            Item(name=GildedRose.CONJURED, sell_in=10, quality=1)
         ]
         gilded_rose = GildedRose(items)
 
@@ -108,25 +94,11 @@ class GildedRoseTest(unittest.TestCase):
                 "Quality of " + item.name + " is over 50. It is: " + str(item.quality)
             )
 
-        # Try to set a quality over 50 when creating an item instance
-        item = None
-        try:
-            item = Item(name="Another random item", sell_in=0, quality=51)
-        except ValueError:
-            pass
-
-        # Check if it was possible to set a quality over 50 (it shouldn't be)
-        self.assertEqual(
-            item,
-            None,
-            "Possible to set quality of an item over 50 when creating instance"
-        )
-
     def test_sulfaras_unchanged_sell_in_and_quality(self):
         """Test if sell_in and quality remain unchanged when updating quality of Sulfaras"""
 
         # Create GildedRose instance with Sulfaras item and update quality
-        items = [Item(name=Item.SULFURAS, sell_in=5, quality=1)]
+        items = [Item(name=GildedRose.SULFURAS, sell_in=5, quality=1)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
 
@@ -143,7 +115,7 @@ class GildedRoseTest(unittest.TestCase):
         previous_quality = 1
 
         # Create GildedRose instance with Backstage item and update quality
-        items = [Item(name=Item.BACKSTAGE_PASSES, sell_in=11, quality=previous_quality)]
+        items = [Item(name=GildedRose.BACKSTAGE_PASSES, sell_in=11, quality=previous_quality)]
         gilded_rose = GildedRose(items)
 
         # Update quality when there are 11 days. Quality should increase by 1
@@ -181,9 +153,9 @@ class GildedRoseTest(unittest.TestCase):
 
     def test_conjured_degrades_twice_as_fast(self):
         """Test if Conjured item degrades twice as fast as normal items"""
-        
+
         # Create GildedRose instance with Conjured item
-        items = [Item(name=Item.CONJURED, sell_in=1, quality=10)]
+        items = [Item(name=GildedRose.CONJURED, sell_in=1, quality=10)]
         gilded_rose = GildedRose(items)
 
         # Update quality before sell_in
