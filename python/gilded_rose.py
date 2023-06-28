@@ -10,33 +10,29 @@ class GildedRose:
     def update_quality(self):
         """Update the quality of all the items in the in according to specs in README.md"""
         for item in self.items:
-            if item.name not in [Item.BRIE, Item.BACKSTAGE_PASSES]:
-                if item.quality > 0:
-                    if item.name != Item.SULFURAS:
-                        item.quality = item.quality - 1
-            else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
-                    if item.name == Item.BACKSTAGE_PASSES:
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-            if item.name != Item.SULFURAS:
-                item.sell_in = item.sell_in - 1
-            if item.sell_in < 0:
-                if item.name != Item.BRIE:
-                    if item.name != Item.BACKSTAGE_PASSES:
-                        if item.quality > 0:
-                            if item.name != Item.SULFURAS:
-                                item.quality = item.quality - 1
-                    else:
-                        item.quality = 0
+            # Update the quality of the item according to the specs in README.md
+            if item.name == Item.BRIE:
+                item.change_quality_item_by_number(number=1)
+            elif item.name == Item.BACKSTAGE_PASSES:
+                if item.sell_in > 10:
+                    item.change_quality_item_by_number(number=1)
+                elif item.sell_in > 5:
+                    item.change_quality_item_by_number(number=2)
+                elif item.sell_in > 0:
+                    item.change_quality_item_by_number(number=3)
                 else:
-                    if item.quality < 50:
-                        item.quality = item.quality + 1
+                    item.quality = 0
+            elif item.name != Item.SULFURAS:
+                # When item is not special it degrades twice as fast once the sell by date passed
+                degrade_twice_as_fast = item.sell_in <= 0
+                item.change_quality_item_by_number(
+                    number=-1,
+                    degrade_twice_as_fast=degrade_twice_as_fast
+                )
+
+            # Update the sell_in of the item according to the specs in README.md
+            if item.name != Item.SULFURAS:
+                item.sell_in -= 1
 
 class Item:
     """Class that represents a single Item (that can be held in the Gilded Rose Inn)"""
@@ -58,3 +54,14 @@ class Item:
 
     def __repr__(self):
         return "{self.name}, {self.sell_in}, {self.quality}"
+
+    def change_quality_item_by_number(self, number, degrade_twice_as_fast=False):
+        """
+        Change the quality by the number that is given as parameter (can be positive or negative).
+        While changing the quality, the quality can't go over 50 or be negative (read README.md)
+        """
+        if degrade_twice_as_fast:
+            number *= 2
+
+        if 0 <= self.quality + number <= 50:
+            self.quality += number
